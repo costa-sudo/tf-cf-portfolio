@@ -23,6 +23,6 @@ variable "github_repo_name" {
 
 variable "custom_domain" {
   type        = string
-  description = "The custom domain you want to link to your portfolio (e.g., joaocosta.com)"
-  default     = ""
+  description = "The custom domain you want to link to your portfolio"
+  default     = "costajp.com"
 }

@@ -19,3 +19,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Exception: The permissions granted by this license do not apply to any files 
+located within the 'src/res/' directory. All personal certificates, profile 
+pictures, and third-party credentials remain the exclusive property of the 
+copyright holder and may not be modified or redistributed.

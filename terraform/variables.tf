@@ -18,6 +18,7 @@ variable "github_username" {
 variable "github_repo_name" {
   type        = string
   description = "The name of your public portfolio repository"
+  default     = "tf-cf-portfolio"
 }
 
 variable "custom_domain" {

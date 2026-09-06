@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - dev
+    paths:
+      - "src/**"
+      - "terraform/**"
+      - ".github/workflows/opentofu.yml"
 
 permissions:
   contents: read

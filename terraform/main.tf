@@ -6,12 +6,4 @@ resource "cloudflare_pages_project" "portfolio_site" {
   account_id        = var.cloudflare_account_id
   name              = var.github_repo_name
   production_branch = "main"
-
-}
-
-resource "cloudflare_pages_domain" "portfolio_custom_domain" {
-  count        = var.custom_domain != "" ? 1 : 0
-  account_id   = var.cloudflare_account_id
-  project_name = cloudflare_pages_project.portfolio_site.name
-  domain       = var.custom_domain
 }

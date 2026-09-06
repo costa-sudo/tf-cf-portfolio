@@ -14,12 +14,20 @@ body {
   background-size: 28px 28px;
 }
 
+/* Normal/Portrait Modal Style */
 .pdf-modal-content {
+  width: 600px;
+  height: 800px;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+/* Horizontal/Landscape Modal Style */
+.pdf-modal-content.horizontal-pdf {
   width: 95vw;
-  max-width: 1200px;
-  height: 90vh;
-  max-height: 850px;
-  margin: auto;
+  max-width: 1100px;
+  height: 70vh;
+  max-height: 750px;
 }
 
 .pdf-modal-content iframe,

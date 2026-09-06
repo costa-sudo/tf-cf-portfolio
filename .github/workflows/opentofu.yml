@@ -52,7 +52,7 @@ jobs:
       run: tofu apply -auto-approve
       working-directory: ./terraform
 
-    # Deploys code instantly. Routes to your custom domain on main, or a preview sandbox on dev
+       # Deploys code instantly. Routes to your custom domain on main, or a preview sandbox on dev
     - name: Deploy to Cloudflare Pages
       uses: cloudflare/wrangler-action@v3
       with:
@@ -62,5 +62,6 @@ jobs:
           if [ "${{ github.ref_name }}" = "main" ]; then
             pages deploy src --project-name=tf-cf-portfolio --branch=main
           else
-            pages deploy src --project-name=tf-cf-portfolio --branch=${{ github.ref_name }}
+            pages deploy src --project-name=tf-cf-portfolio --commit-branch=${{ github.ref_name }}
           fi
+

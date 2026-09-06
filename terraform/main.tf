@@ -7,19 +7,9 @@ resource "cloudflare_pages_project" "portfolio_site" {
   name              = var.github_repo_name
   production_branch = "main"
 
+  # Changing from github to direct upload completely bypasses the 8000011 Cloudflare API bug
   source {
-    type = "github"
-    config {
-      owner               = var.github_username
-      repo_name           = var.github_repo_name
-      production_branch   = "main"
-      deployments_enabled = true
-    }
-  }
-
-  build_config {
-    build_command   = ""
-    destination_dir = "src" # Tells Cloudflare your HTML & certificates are inside the src/ folder
+    type = "direct_upload"
   }
 }
 

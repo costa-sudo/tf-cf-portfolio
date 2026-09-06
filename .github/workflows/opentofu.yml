@@ -10,18 +10,13 @@ permissions:
 
 jobs:
   opentofu:
-    name: "OpenTofu Apply"
+    name: "Infrastructure & Deployment"
     runs-on: ubuntu-latest
-    
-    defaults:
-      run:
-        working-directory: ./terraform
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Uses the official OpenTofu setup action instead of HashiCorp's
     - name: Setup OpenTofu
       uses: opentofu/setup-opentofu@v1
       with:
@@ -29,9 +24,19 @@ jobs:
 
     - name: OpenTofu Init
       run: tofu init
+      working-directory: ./terraform
 
     - name: OpenTofu Apply
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       run: tofu apply -auto-approve
+      working-directory: ./terraform
+
+    # Direct Upload step to push your HTML and certificates securely
+    - name: Deploy to Cloudflare Pages
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        command: pages deploy src --project-name=tf-cf-portfolio --branch=main

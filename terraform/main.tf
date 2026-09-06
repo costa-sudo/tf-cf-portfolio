@@ -7,7 +7,6 @@ resource "cloudflare_pages_project" "portfolio_site" {
   name              = var.github_repo_name
   production_branch = "main"
 
-  # Removing the source block entirely automatically forces Cloudflare to use Direct Upload
 }
 
 resource "cloudflare_pages_domain" "portfolio_custom_domain" {

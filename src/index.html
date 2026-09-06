@@ -35,31 +35,7 @@
     };
   </script>
 
-  <style>
-    ::selection {
-      background: rgba(52, 211, 153, 0.24);
-      color: #f8fafc;
-    }
-
-    body {
-      background-color: #020617;
-    }
-
-    .terminal-grid {
-      background-image:
-        linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
-      background-size: 28px 28px;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="relative min-h-screen font-sans text-slate-300 antialiased">
@@ -558,37 +534,6 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    function openPdfModal(pdfUrl, title) {
-      const modal = document.getElementById('pdfModal');
-      const viewer = document.getElementById('pdfViewer');
-      const titleEl = document.getElementById('pdfModalTitle');
-      const externalLink = document.getElementById('pdfExternalLink');
-
-      viewer.src = pdfUrl;
-      titleEl.innerText = title || 'Certificate Preview';
-      externalLink.href = pdfUrl;
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closePdfModal(event) {
-      const modal = document.getElementById('pdfModal');
-      const viewer = document.getElementById('pdfViewer');
-
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      viewer.src = '';
-      document.body.style.overflow = '';
-    }
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closePdfModal();
-    });
-  </script>
+  <script src="main.js" defer></script>
 </body>
 </html>

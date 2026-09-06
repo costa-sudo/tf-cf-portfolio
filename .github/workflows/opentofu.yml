@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - dev
 
 permissions:
   contents: read
@@ -26,7 +27,7 @@ jobs:
       run: tofu init
       working-directory: ./terraform
 
-    # Imports the project if it exists
+    # Imports your project layout safely if running for the first time
     - name: OpenTofu Import Project (If exists)
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -34,25 +35,32 @@ jobs:
       run: tofu import cloudflare_pages_project.portfolio_site ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio || true
       working-directory: ./terraform
 
-    # NEW STEP: Imports the custom domain so OpenTofu stops trying to re-create it
+    # Imports your domain mapping safely if running for the first time
     - name: OpenTofu Import Domain (If exists)
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu import "cloudflare_pages_domain.portfolio_custom_domain[0]" ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio/costajp.com || true
+      run: tofu import "cloudflare_pages_domain.portfolio_custom_domain" ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio/costajp.com || true
       working-directory: ./terraform
 
-    # This will now see both items are tracked and move straight to uploading your files
+    # Infrastructure changes are locked down and ONLY execute on the main branch
     - name: OpenTofu Apply
+      if: github.ref_name == 'main'
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       run: tofu apply -auto-approve
       working-directory: ./terraform
 
+    # Deploys code instantly. Routes to your custom domain on main, or a preview sandbox on dev
     - name: Deploy to Cloudflare Pages
       uses: cloudflare/wrangler-action@v3
       with:
         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        command: pages deploy src --project-name=tf-cf-portfolio --branch=main
+        command: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            pages deploy src --project-name=tf-cf-portfolio --branch=main
+          else
+            pages deploy src --project-name=tf-cf-portfolio --branch=${{ github.ref_name }}
+          fi

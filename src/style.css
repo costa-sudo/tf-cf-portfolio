@@ -16,30 +16,29 @@ body {
 
 /* Normal/Portrait Modal Style */
 .pdf-modal-content {
-  width: 600px;
-  height: 800px;
-  max-width: 90vw;
-  max-height: 90vh;
+  width: 600px !important;
+  height: 800px !important;
+  max-width: 90vw !important;
+  max-height: 90vh !important;
 }
 
 /* Horizontal/Landscape Modal Style */
 .pdf-modal-content.horizontal-pdf {
-  width: 95vw;
-  max-width: 1100px;
-  height: 70vh;
-  max-height: 750px;
+  width: 95vw !important;
+  max-width: 1100px !important;
+  height: 70vh !important;
+  max-height: 750px !important;
 }
 
 .pdf-modal-content iframe,
 .pdf-modal-content embed,
 .pdf-modal-content object {
-  width: 100%;
-  height: 100%;
-  border: none;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {

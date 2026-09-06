@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - dev
 
 permissions:
   contents: read
@@ -43,9 +42,8 @@ jobs:
       run: tofu import "cloudflare_pages_domain.portfolio_custom_domain" ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio/costajp.com || true
       working-directory: ./terraform
 
-    # Infrastructure changes are locked down and ONLY execute on the main branch
+    # Infrastructure changes execute cleanly on the main branch
     - name: OpenTofu Apply
-      if: github.ref_name == 'main'
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -56,14 +54,9 @@ jobs:
     - name: Install Cloudflare Wrangler
       run: npm install -g wrangler
 
-    # Deploy code natively. Routes to your custom domain on main, or a preview sandbox on dev
+    # Deploy code natively using the main branch parameter directly
     - name: Deploy to Cloudflare Pages
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: |
-        if [ "${{ github.ref_name }}" = "main" ]; then
-          wrangler pages deploy src --project-name=tf-cf-portfolio --branch=main
-        else
-          wrangler pages deploy src --project-name=tf-cf-portfolio --commit-branch=${{ github.ref_name }}
-        fi
+      run: wrangler pages deploy src --project-name=tf-cf-portfolio --branch=main

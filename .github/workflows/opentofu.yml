@@ -34,14 +34,6 @@ jobs:
       run: tofu import cloudflare_pages_project.portfolio_site ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio || true
       working-directory: ./terraform
 
-    # Imports your domain mapping safely if running for the first time
-    - name: OpenTofu Import Domain (If exists)
-      env:
-        TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu import "cloudflare_pages_domain.portfolio_custom_domain" ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio/costajp.com || true
-      working-directory: ./terraform
-
     # Infrastructure changes execute cleanly on the main branch
     - name: OpenTofu Apply
       env:

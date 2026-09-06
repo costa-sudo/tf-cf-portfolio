@@ -56,14 +56,9 @@ jobs:
     - name: Install Cloudflare Wrangler
       run: npm install -g wrangler
 
-    # Deploy code natively. Routes to your custom domain on main, or a preview sandbox on dev
+    # Deploy code natively using the dynamic branch flag accepted by the modern Wrangler CLI
     - name: Deploy to Cloudflare Pages
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: |
-        if [ "${{ github.ref_name }}" = "main" ]; then
-          wrangler pages deploy src --project-name=tf-cf-portfolio --branch=main
-        else
-          wrangler pages deploy src --project-name=tf-cf-portfolio --commit-branch=${{ github.ref_name }}
-        fi
+      run: wrangler pages deploy src --project-name=tf-cf-portfolio --branch=${{ github.ref_name }}

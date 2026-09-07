@@ -324,7 +324,7 @@ html.theme-light .theme-icon-sun {
 /* Horizontal/Landscape Modal Style */
 .pdf-modal-content.horizontal-pdf {
   width: min(95vw, calc((90vh - 4.5rem) * 1.3333), 1100px) !important;
-  height: min(90vh, calc(95vw * 0.75 + 4.5rem), 900px) !important;
+  height: min(90vh, calc(95vw * 0.675 + 4.5rem), 810px) !important;
 }
 
 .pdf-modal-content iframe,

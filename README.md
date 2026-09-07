@@ -76,7 +76,7 @@ The OpenTofu config defines a `cloudflare_pages_project` and `cloudflare_pages_d
 - production branch is set to `main`
 - the current setup binds the Pages project to `costajp.com`
 
-This repo currently hardcodes the project name and custom domain in both the Terraform resource and the GitHub Actions deploy step, while the variables file still provides the reusable defaults for local setup.
+The project name and custom domain use reusable Terraform defaults, while the GitHub Actions deploy and import steps currently use the repository's production values directly.
 
 The workflow also imports existing Cloudflare resources when they already exist, which helps make first-time deployment safer.
 

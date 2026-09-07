@@ -11,5 +11,5 @@ resource "cloudflare_pages_project" "portfolio_site" {
 resource "cloudflare_pages_domain" "portfolio_custom_domain" {
   account_id   = var.cloudflare_account_id
   project_name = cloudflare_pages_project.portfolio_site.name
-  domain       = "costajp.com"
+  domain       = var.custom_domain
 }

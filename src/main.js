@@ -4,6 +4,26 @@ if (yearEl) {
   yearEl.textContent = new Date().getFullYear();
 }
 
+const themeToggle = document.getElementById('themeToggle');
+const root = document.documentElement;
+
+function updateThemeToggle() {
+  const isLight = root.classList.contains('theme-light');
+  if (!themeToggle) return;
+
+  themeToggle.setAttribute('aria-label', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+  themeToggle.setAttribute('title', isLight ? 'Switch to dark mode' : 'Switch to light mode');
+}
+
+if (themeToggle) {
+  updateThemeToggle();
+  themeToggle.addEventListener('click', () => {
+    root.classList.toggle('theme-light');
+    localStorage.setItem('portfolio-theme', root.classList.contains('theme-light') ? 'light' : 'dark');
+    updateThemeToggle();
+  });
+}
+
 function openPdfModal(pdfUrl, title, isLandscape = false) {
   const modal = document.getElementById('pdfModal');
   const viewer = document.getElementById('pdfViewer');

@@ -7,12 +7,18 @@
     name="description"
     content="Joao Costa — Systems, Platform & Site Reliability Engineering."
   />
-  <meta name="theme-color" content="#020617" />
+  <meta name="theme-color" content="#1d1d1f" />
   <title>Joao Costa</title>
+
+  <script>
+    const savedTheme = localStorage.getItem('portfolio-theme');
+    if (savedTheme === 'light') document.documentElement.classList.add('theme-light');
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Montserrat:ital,wght@0,300;0,700;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -69,28 +75,46 @@
           joao@portfolio: ~/about
         </p>
 
-        <div
-          class="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1"
-          title="This portfolio is actively being rebuilt."
-        >
-          <span class="relative flex h-2 w-2">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
-          </span>
-          <span class="font-mono text-[10px] tracking-wide text-emerald-300 sm:text-xs">
-            BUILD_IN_PROGRESS
-          </span>
+        <div class="flex items-center gap-3">
+          <button
+            id="themeToggle"
+            type="button"
+            class="theme-toggle rounded-full border border-slate-700/80 p-1.5 text-slate-400 transition hover:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+            aria-label="Switch to light mode"
+            title="Switch to light mode"
+          >
+            <svg class="theme-icon-moon h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z" />
+            </svg>
+            <svg class="theme-icon-sun hidden h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <circle cx="12" cy="12" r="3.5" />
+              <path stroke-linecap="round" d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          </button>
+
+          <div
+            class="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-1"
+            title="This portfolio is actively being rebuilt."
+          >
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-70"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+            </span>
+            <span class="font-mono text-[10px] tracking-wide text-emerald-300 sm:text-xs">
+              BUILD_IN_PROGRESS
+            </span>
+          </div>
         </div>
       </header>
 
       <div class="px-6 py-8 sm:px-10 sm:py-12 lg:px-16 lg:py-14">
         
         <div class="mb-12">
-          <p class="mb-4 font-mono text-sm text-slate-500">
+          <p class="terminal-command mb-4 font-mono text-sm text-slate-500">
             <span class="text-emerald-400">$ whoami</span>
           </p>
 
-          <h1 id="page-title" class="font-display text-4xl sm:text-5xl md:text-6xl uppercase text-white flex items-center gap-3">
+          <h1 id="page-title" class="font-display text-4xl sm:text-5xl md:text-[4.25rem] uppercase text-white flex items-center gap-3">
             <span class="font-light text-white">JOAO</span> 
             <span class="font-bold text-white">COSTA</span>
           </h1>
@@ -101,7 +125,7 @@
         </div>
 
         <div class="mb-12">
-          <p class="mb-4 font-mono text-sm text-slate-500">
+          <p class="terminal-command mb-4 font-mono text-sm text-slate-500">
             <span class="text-emerald-400">$ systemctl status joao.service</span>
           </p>
 
@@ -122,8 +146,8 @@
 </p>
         </div>
 
-        <div class="mb-12">
-          <p class="mb-4 font-mono text-sm text-slate-500">
+        <div class="current-focus mb-12">
+          <p class="terminal-command mb-4 font-mono text-sm text-slate-500">
             <span class="text-emerald-400">$ cat current_focus.yml</span>
           </p>
 
@@ -162,7 +186,7 @@
 
         <div class="mb-12">
           <div class="mb-4 flex flex-wrap items-center justify-between gap-2">
-            <p class="font-mono text-sm text-slate-500">
+            <p class="terminal-command font-mono text-sm text-slate-500">
               <span class="text-emerald-400">$ cat certifications.json</span>
             </p>
             
@@ -194,8 +218,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-jamf">JAMF 400</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Certified Expert</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-jamf">JAMF 400</p>
+                <p class="certification-name jamf-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-jamf">Certified Expert</p>
                 <p class="font-mono text-[10px] text-slate-500">Credly Verified ↗</p>
               </div>
             </a>
@@ -213,8 +237,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-jamf">JAMF 370</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Protect Admin</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-jamf">JAMF 370</p>
+                <p class="certification-name jamf-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-jamf">Protect Admin</p>
                 <p class="font-mono text-[10px] text-slate-500">Credly Verified ↗</p>
               </div>
             </a>
@@ -232,8 +256,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-jamf">JAMF 270</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Protect Tech</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-jamf">JAMF 270</p>
+                <p class="certification-name jamf-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-jamf">Protect Tech</p>
                 <p class="font-mono text-[10px] text-slate-500">Credly Verified ↗</p>
               </div>
             </a>
@@ -250,8 +274,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-jamf">JAMF 300</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Certified Admin</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-jamf">JAMF 300</p>
+                <p class="certification-name jamf-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-jamf">Certified Admin</p>
                 <p class="font-mono text-[10px] text-slate-500">PDF Document ↗</p>
               </div>
             </button>
@@ -268,8 +292,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-jamf">JAMF 200</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Certified Tech</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-jamf">JAMF 200</p>
+                <p class="certification-name jamf-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-jamf">Certified Tech</p>
                 <p class="font-mono text-[10px] text-slate-500">PDF Document ↗</p>
               </div>
             </button>
@@ -286,8 +310,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-emerald-400">SPLUNK</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Fundamentals Part 1</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-emerald-400">SPLUNK</p>
+                <p class="certification-name splunk-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-emerald-400">Fundamentals Part 1</p>
                 <p class="font-mono text-[10px] text-slate-500">PDF Document ↗</p>
               </div>
             </button>
@@ -304,8 +328,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-emerald-400">SPLUNK</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">Fundamentals Part 2</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-emerald-400">SPLUNK</p>
+                <p class="certification-name splunk-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-emerald-400">Fundamentals Part 2</p>
                 <p class="font-mono text-[10px] text-slate-500">PDF Document ↗</p>
               </div>
             </button>
@@ -322,8 +346,8 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-sky-400">AXELOS</p>
-                <p class="truncate font-sans text-sm font-bold text-slate-200 transition-colors group-hover:text-white">ITIL Foundation</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-sky-400">AXELOS</p>
+                <p class="certification-name axelos-accent truncate font-sans text-xs font-bold text-slate-400 transition-colors group-hover:text-sky-400">ITIL Foundation</p>
                 <p class="font-mono text-[10px] text-slate-500">PDF Document ↗</p>
               </div>
             </button>
@@ -341,15 +365,15 @@
                 </svg>
               </div>
               <div class="min-w-0 flex-1">
-                <p class="font-mono text-xs font-semibold text-slate-400 transition-colors group-hover:text-orange-400">CREDLY PROFILE</p>
-                <p class="font-mono text-[10px] text-slate-500 transition-colors group-hover:text-slate-300">See my other badges ↗</p>
+                <p class="font-mono text-xs font-semibold text-white transition-colors group-hover:text-orange-400">CREDLY PROFILE</p>
+                <p class="certification-name credly-accent font-mono text-[10px] text-slate-400 transition-colors group-hover:text-orange-400">See my other badges ↗</p>
               </div>
             </a>
           </div>
         </div>
 
         <section class="mb-12">
-          <p class="mb-4 font-mono text-sm text-slate-500">
+          <p class="terminal-command mb-4 font-mono text-sm text-slate-500">
             <span class="text-emerald-400">$ terraform plan -target=module.connect</span>
           </p>
 
@@ -360,35 +384,31 @@
                 <img
                   src="res/profile.jpg" 
                   alt="Joao Costa profile picture"
-                  class="block absolute inset-0 h-full w-full object-cover object-center opacity-85 grayscale group-hover:grayscale-0 transition-all duration-300 group-hover:scale-105 group-hover:opacity-100"
+                  class="block absolute inset-0 h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
                 />
-                <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-5">
-                  <p class="text-sm font-bold tracking-wide text-slate-100">JOAO COSTA</p>
-                </div>
               </div>
             </div>
 
             <!-- Social Connections -->
-            <nav class="grid gap-4 sm:grid-cols-3 lg:col-span-9 lg:grid-cols-3" aria-label="Social connections">
+            <nav class="social-connections grid gap-4 sm:grid-cols-3 lg:col-span-9 lg:grid-cols-3" aria-label="Social connections">
               <!-- LinkedIn -->
               <a
                 href="https://linkedin.com/in/joaopedrocosta/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="LinkedIn Profile"
-                class="group flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                class="linkedin-card group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
               >
-                <div class="mb-6 flex items-center justify-between">
+                <div class="relative z-10 mb-6 flex items-center justify-between">
                   <div class="flex items-center space-x-3">
-                    <svg class="h-8 w-8 text-slate-500 transition-colors duration-200 group-hover:text-sky-400" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-                    </svg>
-                    <span class="font-mono text-xs font-medium tracking-wide text-slate-400 group-hover:text-slate-200">LinkedIn</span>
+                    <i class="linkedin-icon ri-linkedin-fill inline-block h-[3.75rem] w-[3.75rem] text-6xl text-slate-500 transition-opacity duration-200 group-hover:text-sky-400" aria-hidden="true"></i>
                   </div>
                   <svg class="h-4 w-4 text-slate-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
                 </div>
 
-                <div class="font-mono text-[11px] leading-relaxed">
+                <i class="brand-watermark linkedin-watermark ri-linkedin-fill" aria-hidden="true"></i>
+
+                <div class="hcl-preview relative z-10 font-mono text-[11px] leading-relaxed">
                   <div>
                     <span class="font-semibold text-purple-400">data</span>
                     <span class="font-semibold text-teal-400">"linkedin_profile"</span>
@@ -408,19 +428,18 @@
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub Profile"
-                class="group flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                class="github-card group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
               >
-                <div class="mb-6 flex items-center justify-between">
+                <div class="relative z-10 mb-6 flex items-center justify-between">
                   <div class="flex items-center space-x-3">
-                    <svg class="h-8 w-8 text-slate-500 transition-colors duration-200 group-hover:text-slate-100" viewBox="0 0 24 24" fill="currentColor">
-                      <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
-                    </svg>
-                    <span class="font-mono text-xs font-medium tracking-wide text-slate-400 group-hover:text-slate-200">GitHub</span>
+                    <i class="github-icon ri-github-line inline-block h-[3.75rem] w-[3.75rem] text-6xl text-slate-500 transition-opacity duration-200 group-hover:text-slate-100" aria-hidden="true"></i>
                   </div>
                   <svg class="h-4 w-4 text-slate-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
                 </div>
 
-                <div class="font-mono text-[11px] leading-relaxed">
+                <i class="brand-watermark github-watermark ri-github-line" aria-hidden="true"></i>
+
+                <div class="hcl-preview relative z-10 font-mono text-[11px] leading-relaxed">
                   <div>
                     <span class="font-semibold text-purple-400">data</span>
                     <span class="font-semibold text-teal-400">"github_user"</span>
@@ -438,19 +457,18 @@
               <a
                 href="mailto:jpoc.joaopedro@gmail.com"
                 aria-label="Send Email"
-                class="group flex flex-col justify-between rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
+                class="email-card group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800 bg-slate-900/40 p-5 sm:p-6 transition-all duration-200 hover:border-emerald-500/50 hover:bg-slate-900/80 focus:outline-none focus:ring-2 focus:ring-emerald-400/60"
               >
-                <div class="mb-6 flex items-center justify-between">
+                <div class="relative z-10 mb-6 flex items-center justify-between">
                   <div class="flex items-center space-x-3">
-                    <svg class="h-8 w-8 text-slate-500 transition-colors duration-200 group-hover:text-amber-400" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
-                    </svg>
-                    <span class="font-mono text-xs font-medium tracking-wide text-slate-400 group-hover:text-slate-200">Email</span>
+                    <i class="email-icon ri-send-ins-line inline-block h-[3.75rem] w-[3.75rem] text-6xl text-slate-500 transition-opacity duration-200 group-hover:text-amber-400" aria-hidden="true"></i>
                   </div>
                   <svg class="h-4 w-4 text-slate-600 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
                 </div>
 
-                <div class="font-mono text-[11px] leading-relaxed">
+                <i class="brand-watermark email-watermark ri-send-ins-line" aria-hidden="true"></i>
+
+                <div class="hcl-preview relative z-10 font-mono text-[11px] leading-relaxed">
                   <div>
                     <span class="font-semibold text-purple-400">data</span>
                     <span class="font-semibold text-teal-400">"email_inbox"</span>

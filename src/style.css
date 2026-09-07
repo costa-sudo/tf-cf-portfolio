@@ -3,15 +3,287 @@
   color: #f8fafc;
 }
 
+:root {
+  color-scheme: dark;
+}
+
 body {
-  background-color: #020617;
+  background-color: #1d1d1f;
+  transition: background-color 180ms ease, color 180ms ease;
 }
 
 .terminal-grid {
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 28px 28px;
+}
+
+html.theme-light {
+  color-scheme: light;
+}
+
+html.theme-light body {
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+}
+
+html.theme-light .terminal-grid {
+  background-image:
+    linear-gradient(rgba(60, 60, 67, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(60, 60, 67, 0.055) 1px, transparent 1px);
+}
+
+html.theme-light .bg-slate-950\/80 {
+  background-color: rgba(255, 255, 255, 0.78);
+}
+
+html.theme-light .bg-slate-900\/40,
+html.theme-light .bg-slate-900 {
+  background-color: rgba(242, 242, 247, 0.82);
+}
+
+html.theme-light .bg-slate-950 {
+  background-color: #ffffff;
+}
+
+html.theme-light .border-slate-800,
+html.theme-light .border-slate-800\/90,
+html.theme-light .border-slate-800\/80,
+html.theme-light .border-slate-800\/60 {
+  border-color: rgba(60, 60, 67, 0.16);
+}
+
+html.theme-light .text-white,
+html.theme-light .text-slate-100,
+html.theme-light .text-slate-200 {
+  color: #1d1d1f;
+}
+
+html.theme-light .text-slate-300 {
+  color: #3a3a3c;
+}
+
+html.theme-light .text-slate-400 {
+  color: #636366;
+}
+
+html.theme-light .text-slate-500,
+html.theme-light .text-slate-600 {
+  color: #8e8e93;
+}
+
+html.theme-light .text-slate-700 {
+  color: #aeaeb2;
+}
+
+html.theme-light .text-emerald-400,
+html.theme-light .group:hover .group-hover\:text-emerald-400 {
+  color: #008f5a !important;
+  text-shadow: 0 0 8px rgba(0, 143, 90, 0.24);
+}
+
+.terminal-command {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.terminal-command::after {
+  content: "_";
+  color: currentColor;
+  animation: terminal-cursor 1.1s steps(2, start) infinite;
+}
+
+@keyframes terminal-cursor {
+  50% {
+    opacity: 0;
+  }
+}
+
+html.theme-light .current-focus article p.text-slate-400 {
+  color: #4b5563 !important;
+}
+
+.group:hover .certification-name.jamf-accent {
+  color: #778eb1 !important;
+}
+
+.group:hover .certification-name.splunk-accent {
+  color: #34d399 !important;
+}
+
+.group:hover .certification-name.axelos-accent {
+  color: #38bdf8 !important;
+}
+
+.group:hover .certification-name.credly-accent {
+  color: #fb923c !important;
+}
+
+html.theme-light .social-connections > a:hover .group-hover\:text-slate-200 {
+  color: #1d1d1f !important;
+}
+
+html.theme-light .social-connections > a {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(60, 60, 67, 0.18);
+}
+
+.social-connections > a {
+  background-color: rgba(15, 23, 42, 0.4);
+}
+
+html.theme-light .social-connections > a {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.social-connections > .linkedin-card:hover {
+  background-color: rgba(56, 189, 248, 0.12) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+}
+
+.social-connections > .github-card:hover {
+  background-color: rgba(119, 142, 177, 0.14) !important;
+  border-color: rgba(119, 142, 177, 0.55) !important;
+}
+
+.social-connections > .email-card:hover {
+  background-color: rgba(167, 139, 155, 0.14) !important;
+  border-color: rgba(167, 139, 155, 0.5) !important;
+}
+
+.linkedin-icon {
+  transform: translateX(2px);
+}
+
+.social-connections .linkedin-icon,
+.social-connections .github-icon,
+.social-connections .email-icon {
+  opacity: 0.5;
+}
+
+.social-connections .linkedin-icon {
+  color: #0a66c2 !important;
+}
+
+.social-connections .github-icon {
+  color: #475569 !important;
+}
+
+.social-connections .email-icon {
+  color: #a78b9b !important;
+}
+
+html:not(.theme-light) .social-connections .linkedin-icon,
+html:not(.theme-light) .social-connections .github-icon,
+html:not(.theme-light) .social-connections .email-icon {
+  color: #64748b !important;
+}
+
+html:not(.theme-light) .social-connections > .linkedin-card:hover .linkedin-icon {
+  color: #0a66c2 !important;
+  opacity: 1;
+}
+
+html:not(.theme-light) .social-connections > .github-card:hover .github-icon {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+html:not(.theme-light) .social-connections > .email-card:hover .email-icon {
+  color: #a78b9b !important;
+  opacity: 1;
+}
+
+.brand-watermark {
+  position: absolute;
+  right: -3rem;
+  bottom: -5rem;
+  z-index: 0;
+  pointer-events: none;
+  font-size: 18rem;
+  line-height: 1;
+  color: #64748b;
+  background: linear-gradient(135deg, #475569 0%, #94a3b8 48%, #cbd5e1 62%, #64748b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.05;
+  transform: rotate(-8deg);
+}
+
+html.theme-light .brand-watermark {
+  opacity: 0.08;
+}
+
+.social-connections > .linkedin-card:hover .linkedin-icon {
+  color: #0a66c2 !important;
+  opacity: 1;
+}
+
+.social-connections > .github-card:hover .github-icon {
+  opacity: 1;
+}
+
+.social-connections > .email-card:hover .email-icon {
+  color: #a78b9b !important;
+  opacity: 1;
+}
+
+html.theme-light .social-connections > .github-card:hover .github-icon {
+  color: #000000 !important;
+}
+
+html:not(.theme-light) .social-connections > .github-card:hover .github-icon {
+  color: #ffffff !important;
+}
+
+html.theme-light .hcl-preview .text-purple-400 {
+  color: #6d28d9 !important;
+}
+
+html.theme-light .hcl-preview .text-teal-400 {
+  color: #0f766e !important;
+}
+
+html.theme-light .hcl-preview .text-amber-300 {
+  color: #a16207 !important;
+}
+
+html.theme-light .hcl-preview .text-sky-300 {
+  color: #0369a1 !important;
+}
+
+html.theme-light .hcl-preview .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html.theme-light .hcl-preview .text-slate-400,
+html.theme-light .hcl-preview .text-slate-300 {
+  color: #374151 !important;
+}
+
+html.theme-light .theme-toggle:hover {
+  color: #1d1d1f;
+}
+
+html.theme-light .theme-icon-moon {
+  display: none;
+}
+
+html.theme-light .theme-icon-sun {
+  display: block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .theme-toggle svg {
+    transition: transform 180ms ease;
+  }
+
+  .theme-toggle:hover svg {
+    transform: rotate(12deg);
+  }
 }
 
 /* Normal/Portrait Modal Style */

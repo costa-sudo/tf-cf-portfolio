@@ -126,31 +126,63 @@ html.theme-light .social-connections > a:hover .group-hover\:text-slate-200 {
 }
 
 html.theme-light .social-connections > a {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #ffffff;
   border-color: rgba(60, 60, 67, 0.18);
 }
 
 .social-connections > a {
-  background-color: rgba(15, 23, 42, 0.4);
+  background-color: rgba(15, 23, 42, 0.4) !important;
+  background-image: none !important;
 }
 
 html.theme-light .social-connections > a {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: #ffffff !important;
+  background-image: none !important;
+}
+
+.card-surface {
+  background-color: transparent !important;
+  isolation: isolate;
+}
+
+html.theme-light .card-surface {
+  background-color: transparent !important;
+}
+
+.card-surface::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background-color: rgba(15, 23, 42, 0.4);
+}
+
+html.theme-light .card-surface::before {
+  background-color: #ffffff;
 }
 
 .social-connections > .linkedin-card:hover {
-  background-color: rgba(56, 189, 248, 0.12) !important;
   border-color: rgba(56, 189, 248, 0.5) !important;
 }
 
+.social-connections > .linkedin-card:hover::before {
+  background-color: rgba(56, 189, 248, 0.12);
+}
+
 .social-connections > .github-card:hover {
-  background-color: rgba(119, 142, 177, 0.14) !important;
   border-color: rgba(119, 142, 177, 0.55) !important;
 }
 
+.social-connections > .github-card:hover::before {
+  background-color: rgba(119, 142, 177, 0.14);
+}
+
 .social-connections > .email-card:hover {
-  background-color: rgba(167, 139, 155, 0.14) !important;
   border-color: rgba(167, 139, 155, 0.5) !important;
+}
+
+.social-connections > .email-card:hover::before {
+  background-color: rgba(167, 139, 155, 0.14);
 }
 
 .linkedin-icon {
@@ -205,10 +237,7 @@ html:not(.theme-light) .social-connections > .email-card:hover .email-icon {
   font-size: 18rem;
   line-height: 1;
   color: #64748b;
-  background: linear-gradient(135deg, #475569 0%, #94a3b8 48%, #cbd5e1 62%, #64748b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 1.5rem rgba(148, 163, 184, 0.16);
   opacity: 0.05;
   transform: rotate(-8deg);
 }

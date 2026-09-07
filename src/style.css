@@ -318,7 +318,7 @@ html.theme-light .theme-icon-sun {
 /* Normal/Portrait Modal Style */
 .pdf-modal-content {
   width: 650px !important;
-  height: 850px !important;
+  height: 1000px !important;
   max-width: 90vw !important;
   max-height: 90vh !important;
 }
@@ -326,7 +326,7 @@ html.theme-light .theme-icon-sun {
 /* Horizontal/Landscape Modal Style */
 .pdf-modal-content.horizontal-pdf {
   width: 97vw !important;
-  max-width: 1200px !important;
+  max-width: 1050px !important;
   height: 75vh !important;
   max-height: 800px !important;
 }

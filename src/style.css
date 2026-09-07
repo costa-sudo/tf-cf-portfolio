@@ -317,18 +317,18 @@ html.theme-light .theme-icon-sun {
 
 /* Normal/Portrait Modal Style */
 .pdf-modal-content {
-  width: 600px !important;
-  height: 800px !important;
+  width: 650px !important;
+  height: 850px !important;
   max-width: 90vw !important;
   max-height: 90vh !important;
 }
 
 /* Horizontal/Landscape Modal Style */
 .pdf-modal-content.horizontal-pdf {
-  width: 95vw !important;
-  max-width: 1100px !important;
-  height: 70vh !important;
-  max-height: 750px !important;
+  width: 97vw !important;
+  max-width: 1200px !important;
+  height: 75vh !important;
+  max-height: 800px !important;
 }
 
 .pdf-modal-content iframe,

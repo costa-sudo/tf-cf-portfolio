@@ -32,10 +32,6 @@ pnpm-debug.log*
 
 # Editor and IDE files
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 .idea/
 *.swp
 *.swo

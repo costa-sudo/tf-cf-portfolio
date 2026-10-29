@@ -1,49 +1,27 @@
 # tf-cf-portfolio
 
-A lightweight personal portfolio site for Joao Costa, hosted on Cloudflare Pages and provisioned with OpenTofu/Terraform. The site is intentionally static and simple: HTML, CSS, and a small JavaScript file for modal handling and dynamic year rendering.
+A static portfolio site hosted on Cloudflare Pages. OpenTofu manages the Pages project and custom domain; GitHub Actions deploys the site.
 
 ## What this repo does
 
-This repository contains:
-
-- A static portfolio website in `src/`
-- Cloudflare Pages infrastructure definition in `terraform/`
-- A GitHub Actions workflow that deploys the site and manages the Cloudflare Pages project
-
-The portfolio presents a systems/platform/SRE-focused professional profile, with sections for:
-
-- introduction and background
-- current focus areas
-- certification badges and links
-- PDF certificate previews opened in a modal viewer
+- Serves the portfolio from `src/` without a build step.
+- Uses OpenTofu for Cloudflare Pages infrastructure.
+- Deploys from GitHub Actions and includes PDF certificate previews.
 
 ## Deployment model
 
-This project keeps two deployment paths clear:
-
-- `main` is the production branch and deploys to the live Cloudflare Pages production environment.
-- `dev` is the preview branch and deploys to the Cloudflare Pages preview environment for testing and review.
-
-This keeps the live site separate from experimental changes while still making it easy to preview work in progress.
+- `main` deploys to production and applies infrastructure changes.
+- `dev` deploys to a Cloudflare Pages preview.
 
 ## Architecture
 
-The deployment pattern is:
-
-1. Push code to GitHub.
-2. GitHub Actions runs the OpenTofu workflow.
-3. The workflow initializes infrastructure and optionally imports the Cloudflare Pages project and custom domain.
-4. The workflow applies the Cloudflare Pages configuration on the `main` branch.
-5. The site content from `src/` is deployed with Wrangler to Cloudflare Pages.
-6. The `main` branch goes to the production/custom domain while the `dev` branch deploys as a preview branch.
+GitHub Actions initializes OpenTofu, imports existing Pages resources if needed, applies changes on `main`, then deploys `src/` with Wrangler.
 
 ## Repository structure
 
 ```text
 .
-├── .github/
-│   └── workflows/
-│       └── opentofu.yml
+├── .github/workflows/opentofu.yml
 ├── src/
 │   ├── index.html
 │   ├── main.js
@@ -59,68 +37,48 @@ The deployment pattern is:
 
 ### Key files
 
-- `src/index.html`: the portfolio page content and layout
-- `src/style.css`: styling, modal sizing, and terminal-inspired theme
-- `src/main.js`: small client-side logic for the year and PDF modal behavior
-- `terraform/main.tf`: Cloudflare Pages resource definitions
-- `terraform/variables.tf`: configuration inputs for Cloudflare authentication and custom domain
-- `.github/workflows/opentofu.yml`: CI/CD pipeline for infrastructure and deploys
+- `src/index.html`: page content
+- `src/style.css`: site and modal styling
+- `src/main.js`: theme, year, and certificate modal behavior
+- `terraform/`: Cloudflare Pages configuration
+- `.github/workflows/opentofu.yml`: infrastructure and deployment workflow
 
 ## Deployment flow
 
 ### Cloudflare infrastructure
 
-The OpenTofu config defines a `cloudflare_pages_project` and `cloudflare_pages_domain`:
-
-- the project name is required via `var.project_name`
-- production branch is set to `main`
-- the custom domain is required via `var.custom_domain`
-
-GitHub Actions requires repository variables `CLOUDFLARE_PAGES_PROJECT_NAME` and `CLOUDFLARE_CUSTOM_DOMAIN`; it has no deployment-specific fallback values.
-
-The workflow also imports existing Cloudflare resources when they already exist, which helps make first-time deployment safer.
+The Pages project name and custom domain are required Terraform inputs: `project_name` and `custom_domain`.
 
 ### Site deployment
 
-The workflow installs Wrangler and runs:
-
-```bash
-wrangler pages deploy src --project-name="$TF_VAR_project_name" --branch=${{ github.ref_name }}
-```
-
-That means the actual deployed app is the content in `src/`, not the Terraform directory itself.
+Wrangler deploys the static site from `src/`. The project name is shared with the Terraform configuration.
 
 ## Requirements
 
-Before using this repo, you need:
+GitHub Actions needs these repository variables:
 
-- a GitHub repository for the portfolio
-- a Cloudflare account
-- a Cloudflare Pages-enabled project
-- a custom domain or domain zone managed by Cloudflare
-- a Cloudflare API token with permissions to manage Pages and related domain settings
-- `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` stored as GitHub repository secrets
+- `CLOUDFLARE_PAGES_PROJECT_NAME`
+- `CLOUDFLARE_CUSTOM_DOMAIN`
+
+And these repository secrets:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
 
 ## Local setup
 
-This is a static site, so there is no package install or bundler required.
-
-To preview locally:
+To preview the site, run a local server from `src/`:
 
 ```bash
 cd src
 python -m http.server 8000
 ```
 
-Then open:
-
-```text
-http://localhost:8000
-```
+Then open `http://localhost:8000`.
 
 ## Terraform usage
 
-The infrastructure lives in the `terraform/` folder. A minimal local setup looks like this:
+From `terraform/`, provide the required values as environment variables, then initialize and review the plan:
 
 ```bash
 cd terraform
@@ -131,36 +89,10 @@ export TF_VAR_custom_domain="your-domain.example"
 
 tofu init
 tofu plan
-tofu apply
 ```
 
-Project name and custom domain are required inputs. Set them in your local environment or a `.tfvars` file; neither value is hardcoded as a Terraform default.
-
-The workflow also supports safe first-time imports with the following pattern:
-
-```bash
-tofu import cloudflare_pages_project.portfolio_site <account_id>/<project_name>
-
-tofu import cloudflare_pages_domain.portfolio_custom_domain <account_id>/<project_name>/<custom_domain>
-```
-
-## GitHub Actions workflow
-
-The workflow file is at `.github/workflows/opentofu.yml`.
-
-It performs:
-
-- `tofu init`
-- optional resource import for first-time setup
-- `tofu apply` only on the `main` branch
-- Wrangler-based Cloudflare Pages deployment to either the preview or production branch
-
-## Notes
-
-- The site is intentionally frontend-only and does not use a framework like React or Vue.
-- The custom portfolio styling is designed to resemble a terminal / systems engineering aesthetic.
-- Certification cards link out to Credly and some certificates are surfaced as embedded PDF previews through the modal logic in `src/main.js`.
+Run `tofu apply` after reviewing the plan.
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).

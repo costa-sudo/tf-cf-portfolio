@@ -9,20 +9,12 @@ variable "cloudflare_account_id" {
   description = "Your 32-character Cloudflare Account ID"
 }
 
-variable "github_username" {
+variable "project_name" {
   type        = string
-  description = "Your GitHub username"
-  default     = "JoaoCosta"
-}
-
-variable "github_repo_name" {
-  type        = string
-  description = "The name of your public portfolio repository"
-  default     = "tf-cf-portfolio"
+  description = "The name of your Cloudflare Pages project"
 }
 
 variable "custom_domain" {
   type        = string
   description = "The custom domain you want to link to your portfolio"
-  default     = "costajp.com"
 }

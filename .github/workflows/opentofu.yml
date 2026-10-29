@@ -17,10 +17,21 @@ jobs:
   opentofu:
     name: "Infrastructure & Deployment"
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_project_name: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+      TF_VAR_custom_domain: ${{ vars.CLOUDFLARE_CUSTOM_DOMAIN }}
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
+
+    - name: Validate deployment configuration
+      env:
+        CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+        CLOUDFLARE_CUSTOM_DOMAIN: ${{ vars.CLOUDFLARE_CUSTOM_DOMAIN }}
+      run: |
+        test -n "$CLOUDFLARE_PAGES_PROJECT_NAME" || { echo "Missing repository variable: CLOUDFLARE_PAGES_PROJECT_NAME"; exit 1; }
+        test -n "$CLOUDFLARE_CUSTOM_DOMAIN" || { echo "Missing repository variable: CLOUDFLARE_CUSTOM_DOMAIN"; exit 1; }
 
     - name: Setup OpenTofu
       uses: opentofu/setup-opentofu@v1
@@ -36,7 +47,7 @@ jobs:
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu import cloudflare_pages_project.portfolio_site ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio || true
+      run: tofu import cloudflare_pages_project.portfolio_site "$TF_VAR_cloudflare_account_id/$TF_VAR_project_name" || true
       working-directory: ./terraform
 
     # Imports your domain mapping safely if running for the first time
@@ -44,7 +55,7 @@ jobs:
       env:
         TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu import cloudflare_pages_domain.portfolio_custom_domain ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/tf-cf-portfolio/costajp.com || true
+      run: tofu import cloudflare_pages_domain.portfolio_custom_domain "$TF_VAR_cloudflare_account_id/$TF_VAR_project_name/$TF_VAR_custom_domain" || true
       working-directory: ./terraform
 
     # Infrastructure changes are locked down and ONLY execute on the main branch
@@ -66,11 +77,11 @@ jobs:
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: wrangler pages deploy src --project-name=tf-cf-portfolio --branch=main
+      run: wrangler pages deploy src --project-name="$TF_VAR_project_name" --branch=main
 
     - name: Deploy to Cloudflare Pages (Preview)
       if: github.ref_name == 'dev'
       env:
         CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: wrangler pages deploy src --project-name=tf-cf-portfolio --branch=dev
+      run: wrangler pages deploy src --project-name="$TF_VAR_project_name" --branch=dev

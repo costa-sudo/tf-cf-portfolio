@@ -72,11 +72,11 @@ The deployment pattern is:
 
 The OpenTofu config defines a `cloudflare_pages_project` and `cloudflare_pages_domain`:
 
-- the project name is configured via `var.github_repo_name`; in this repo it is effectively `tf-cf-portfolio`
+- the project name is required via `var.project_name`
 - production branch is set to `main`
-- the current setup binds the Pages project to `costajp.com`
+- the custom domain is required via `var.custom_domain`
 
-This repo currently hardcodes the project name and custom domain in both the Terraform resource and the GitHub Actions deploy step, while the variables file still provides the reusable defaults for local setup.
+GitHub Actions requires repository variables `CLOUDFLARE_PAGES_PROJECT_NAME` and `CLOUDFLARE_CUSTOM_DOMAIN`; it has no deployment-specific fallback values.
 
 The workflow also imports existing Cloudflare resources when they already exist, which helps make first-time deployment safer.
 
@@ -85,7 +85,7 @@ The workflow also imports existing Cloudflare resources when they already exist,
 The workflow installs Wrangler and runs:
 
 ```bash
-wrangler pages deploy src --project-name=tf-cf-portfolio --branch=${{ github.ref_name }}
+wrangler pages deploy src --project-name="$TF_VAR_project_name" --branch=${{ github.ref_name }}
 ```
 
 That means the actual deployed app is the content in `src/`, not the Terraform directory itself.
@@ -126,21 +126,22 @@ The infrastructure lives in the `terraform/` folder. A minimal local setup looks
 cd terraform
 export TF_VAR_cloudflare_api_token="your-api-token"
 export TF_VAR_cloudflare_account_id="your-account-id"
-export TF_VAR_github_repo_name="tf-cf-portfolio"
+export TF_VAR_project_name="your-pages-project-name"
+export TF_VAR_custom_domain="your-domain.example"
 
 tofu init
 tofu plan
 tofu apply
 ```
 
-The current project binds the Pages domain directly to `costajp.com` in `terraform/main.tf`. If you want to switch to a different domain, update that resource and the corresponding defaults in `terraform/variables.tf`.
+Project name and custom domain are required inputs. Set them in your local environment or a `.tfvars` file; neither value is hardcoded as a Terraform default.
 
 The workflow also supports safe first-time imports with the following pattern:
 
 ```bash
-tofu import cloudflare_pages_project.portfolio_site <account_id>/tf-cf-portfolio
+tofu import cloudflare_pages_project.portfolio_site <account_id>/<project_name>
 
-tofu import cloudflare_pages_domain.portfolio_custom_domain <account_id>/tf-cf-portfolio/costajp.com
+tofu import cloudflare_pages_domain.portfolio_custom_domain <account_id>/<project_name>/<custom_domain>
 ```
 
 ## GitHub Actions workflow

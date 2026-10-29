@@ -6,7 +6,7 @@ A static portfolio site hosted on Cloudflare Pages. OpenTofu manages the Pages p
 
 - Serves the portfolio from `src/` without a build step.
 - Uses OpenTofu for Cloudflare Pages infrastructure.
-- Deploys from GitHub Actions and includes PDF certificate previews.
+- Deploys from GitHub Actions
 
 ## Deployment model
 

@@ -1,4 +1,4 @@
-name: "OpenTofu Deploy"
+name: "Production-Grade Deploy"
 
 on:
   push:
@@ -9,79 +9,101 @@ on:
       - "src/**"
       - "terraform/**"
       - ".github/workflows/opentofu.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "terraform/**"
 
 permissions:
   contents: read
+  pull-requests: write # Required if you want to comment tofu plans on PRs
 
 jobs:
-  opentofu:
-    name: "Infrastructure & Deployment"
+  validate-and-plan:
+    name: "OpenTofu Validate & Plan"
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.8.2
+
+      - name: OpenTofu Fmt & Validate
+        run: |
+          tofu fmt -check
+          tofu init -backend=false
+          tofu validate
+
+      # Optional: If using a remote backend (like Cloudflare R2 / S3), initialize and run plan on PRs
+      - name: OpenTofu Plan
+        if: github.event_name == 'pull_request'
+        env:
+          TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          TF_VAR_project_name: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+          TF_VAR_custom_domain: ${{ vars.CLOUDFLARE_CUSTOM_DOMAIN }}
+        run: tofu plan
+
+  apply-infrastructure:
+    name: "Apply Infrastructure (Main)"
+    needs: validate-and-plan
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
     env:
       TF_VAR_project_name: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
       TF_VAR_custom_domain: ${{ vars.CLOUDFLARE_CUSTOM_DOMAIN }}
-
+      TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Validate deployment configuration
-      env:
-        CLOUDFLARE_PAGES_PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
-        CLOUDFLARE_CUSTOM_DOMAIN: ${{ vars.CLOUDFLARE_CUSTOM_DOMAIN }}
-      run: |
-        test -n "$CLOUDFLARE_PAGES_PROJECT_NAME" || { echo "Missing repository variable: CLOUDFLARE_PAGES_PROJECT_NAME"; exit 1; }
-        test -n "$CLOUDFLARE_CUSTOM_DOMAIN" || { echo "Missing repository variable: CLOUDFLARE_CUSTOM_DOMAIN"; exit 1; }
+      - name: Setup OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: 1.8.2
 
-    - name: Setup OpenTofu
-      uses: opentofu/setup-opentofu@v1
-      with:
-        tofu_version: 1.8.2
+      - name: OpenTofu Init
+        run: tofu init
 
-    - name: OpenTofu Init
-      run: tofu init
-      working-directory: ./terraform
+      - name: OpenTofu Apply
+        run: tofu apply -auto-approve
 
-    # Imports your project layout safely if running for the first time
-    - name: OpenTofu Import Project (If exists)
-      env:
-        TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu import cloudflare_pages_project.portfolio_site "$TF_VAR_cloudflare_account_id/$TF_VAR_project_name" || true
-      working-directory: ./terraform
+  deploy-application:
+    name: "Deploy to Cloudflare Pages"
+    needs: apply-infrastructure
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PROJECT_NAME: ${{ vars.CLOUDFLARE_PAGES_PROJECT_NAME }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    # Imports your domain mapping safely if running for the first time
-    - name: OpenTofu Import Domain (If exists)
-      env:
-        TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu import cloudflare_pages_domain.portfolio_custom_domain "$TF_VAR_cloudflare_account_id/$TF_VAR_project_name/$TF_VAR_custom_domain" || true
-      working-directory: ./terraform
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-    # Infrastructure changes are locked down and ONLY execute on the main branch
-    - name: OpenTofu Apply
-      if: github.ref_name == 'main'
-      env:
-        TF_VAR_cloudflare_api_token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        TF_VAR_cloudflare_account_id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: tofu apply -auto-approve
-      working-directory: ./terraform
+      - name: Install Pinned Wrangler CLI
+        run: npm install -g wrangler@3.114.0
 
-    # Install Wrangler natively onto the runner machine to bypass marketplace wrapper bugs
-    - name: Install Cloudflare Wrangler
-      run: npm install -g wrangler
+      - name: Deploy Production (Main Branch)
+        if: github.ref_name == 'main'
+        run: wrangler pages deploy src --project-name="$PROJECT_NAME" --branch=main
 
-    # Deploy production to the main branch and preview to the dev branch.
-    - name: Deploy to Cloudflare Pages (Production)
-      if: github.ref_name == 'main'
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: wrangler pages deploy src --project-name="$TF_VAR_project_name" --branch=main
-
-    - name: Deploy to Cloudflare Pages (Preview)
-      if: github.ref_name == 'dev'
-      env:
-        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      run: wrangler pages deploy src --project-name="$TF_VAR_project_name" --branch=dev
+      - name: Deploy Preview (Dev Branch)
+        if: github.ref_name == 'dev'
+        run: wrangler pages deploy src --project-name="$PROJECT_NAME" --branch=dev
